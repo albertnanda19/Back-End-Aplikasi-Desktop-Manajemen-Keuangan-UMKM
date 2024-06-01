@@ -9,4 +9,5 @@ interface TransactionRepositoryInterface
     public function createTransaction(array $data);
     public function updateTransaction($id, array $data);
     public function deleteTransaction($id);
+    public function getTotalAmountByTypeAndDateRange($type, $fromDate, $toDate);
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Transaction;
+use Carbon\Carbon;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
@@ -33,5 +34,15 @@ class TransactionRepository implements TransactionRepositoryInterface
         $transaction = Transaction::findOrFail($id);
         $transaction->delete();
         return $transaction;
+    }
+
+    public function getTotalAmountByTypeAndDateRange($type, $fromDate, $toDate)
+    {
+        $fromDate = Carbon::parse($fromDate)->startOfDay();
+        $toDate = Carbon::parse($toDate)->endOfDay();
+
+        return Transaction::where("type", $type)
+            ->whereBetween("created_at", [$fromDate, $toDate])
+            ->sum("amount");
     }
 }
