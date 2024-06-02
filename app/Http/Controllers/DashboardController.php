@@ -35,8 +35,6 @@ class DashboardController extends Controller
         );
         $profit = $income - $expense;
 
-        Log::info("Income: $income, Expense: $expense, Profit: $profit");
-
         $data = [
             "profit" => [
                 "amount" => $profit,

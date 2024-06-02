@@ -4,8 +4,19 @@ namespace App\Helpers;
 
 class ResponseHelper
 {
-    public static function createResponse($status, $message, $data = null)
-    {
+    /**
+     * Create a standardized JSON response.
+     *
+     * @param int $status
+     * @param string $message
+     * @param mixed $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function createResponse(
+        int $status,
+        string $message,
+        $data = null
+    ) {
         return response()->json(
             [
                 "status" => $status,

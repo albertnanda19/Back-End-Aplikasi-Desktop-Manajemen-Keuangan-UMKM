@@ -11,7 +11,15 @@ class Transaction extends Model
 
     protected $table = "transaction";
 
-    protected $fillable = ["id", "type", "amount", "category_id", "note"];
+    protected $fillable = [
+        "id",
+        "type",
+        "amount",
+        "category_id",
+        "note",
+        "created_at",
+        "updated_at",
+    ];
 
     public $incrementing = false;
     protected $keyType = "string";
