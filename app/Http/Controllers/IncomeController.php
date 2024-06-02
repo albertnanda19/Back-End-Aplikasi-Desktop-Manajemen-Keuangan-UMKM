@@ -9,7 +9,6 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Log;
 
 class IncomeController extends Controller
 {
@@ -42,7 +41,7 @@ class IncomeController extends Controller
         return ResponseHelper::createResponse(
             201,
             "Berhasil menambahkan data pemasukan",
-            null
+            $transaction
         );
     }
 }

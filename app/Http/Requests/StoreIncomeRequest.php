@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
+use App\Helpers\ResponseHelper;
 
 class StoreIncomeRequest extends FormRequest
 {
@@ -15,25 +17,38 @@ class StoreIncomeRequest extends FormRequest
     public function rules()
     {
         return [
-            "amount" => "required|integer",
-            "date" => "required|date_format:Y-m-d",
-            "time" => "required|date_format:H:i:s",
-            "category" => ["required", Rule::exists("category", "id")],
+            "amount" => "required|integer|min:0",
+            "category" => "required|string|exists:category,id",
             "note" => "nullable|string",
+            "date" => "required|date",
+            "time" => "required|date_format:H:i:s",
         ];
     }
 
     public function messages()
     {
         return [
-            "amount.required" => "Amount is required",
-            "amount.integer" => "Amount must be an integer",
-            "date.required" => "Date is required",
-            "date.date_format" => "Date must be in the format YYYY-MM-DD",
-            "time.required" => "Time is required",
-            "time.date_format" => "Time must be in the format HH:MM:SS",
-            "category.required" => "Category is required",
-            "category.exists" => "Category must be valid",
+            "amount.required" => "Jumlah harus diisi.",
+            "amount.integer" => "Jumlah harus berupa angka.",
+            "amount.min" => "Jumlah tidak boleh kurang dari 0.",
+            "category.required" => "Kategori harus diisi.",
+            "category.string" => "Kategori harus berupa string.",
+            "category.exists" => "Kategori tidak valid.",
+            "note.string" => "Catatan harus berupa string.",
+            "date.required" => "Tanggal harus diisi.",
+            "date.date" => "Tanggal tidak valid.",
+            "time.required" => "Waktu harus diisi.",
+            "time.date_format" =>
+                "Format waktu tidak valid. Format yang benar adalah HH:MM:SS.",
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors()->all();
+
+        throw new HttpResponseException(
+            ResponseHelper::createResponse(400, $errors[0], null)
+        );
     }
 }

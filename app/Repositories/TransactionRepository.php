@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
@@ -14,7 +15,14 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function getTransactionById($id)
     {
-        return Transaction::findOrFail($id);
+        try {
+            return Transaction::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                ["error" => "Transaksi tidak ditemukan"],
+                404
+            );
+        }
     }
 
     public function createTransaction(array $data)

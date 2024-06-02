@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -13,7 +14,14 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function getCategoryById($id)
     {
-        return Category::findOrFail($id);
+        try {
+            return Category::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                ["error" => "Kategori tidak ditemukan"],
+                404
+            );
+        }
     }
 
     public function createCategory(array $data)
