@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
@@ -19,8 +20,12 @@ Route::post("/income", [IncomeController::class, "store"])
         \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
     ])
     ->middleware([JsonResponseMiddleware::class]);
+
 Route::post("/expense", [ExpenseController::class, "store"])
     ->withoutMiddleware([
         \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
     ])
+    ->middleware([JsonResponseMiddleware::class]);
+
+Route::get('/report', [ReportController::class, 'getReport'])
     ->middleware([JsonResponseMiddleware::class]);

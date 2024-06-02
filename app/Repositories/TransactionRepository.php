@@ -53,4 +53,10 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->whereBetween("created_at", [$fromDate, $toDate])
             ->sum("amount");
     }
+
+    public function getTransactionsByDate($date)
+    {
+        $date = Carbon::parse($date)->startOfDay();
+        return Transaction::whereDate('created_at', $date)->get();
+    }
 }
