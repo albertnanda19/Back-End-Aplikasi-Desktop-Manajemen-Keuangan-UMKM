@@ -20,19 +20,19 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $fromDate = Carbon::yesterday()->toDateString();
+        $fromDate = Carbon::now()->subMonth()->toDateString();
         $toDate = Carbon::today()->toDateString();
 
-        $income = $this->transactionRepository->getTotalAmountByTypeAndDateRange(
+        $income = intval($this->transactionRepository->getTotalAmountByTypeAndDateRange(
             "income",
             $fromDate,
             $toDate
-        );
-        $expense = $this->transactionRepository->getTotalAmountByTypeAndDateRange(
+        ));
+        $expense = intval($this->transactionRepository->getTotalAmountByTypeAndDateRange(
             "expense",
             $fromDate,
             $toDate
-        );
+        ));
         $profit = $income - $expense;
 
         $data = [
