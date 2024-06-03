@@ -35,21 +35,62 @@ class DashboardController extends Controller
         ));
         $profit = $income - $expense;
 
+        $detailIncome = [];
+        $detailExpense = [];
+        $detailProfit = [];
+
+        $currentDate = Carbon::now()->subMonth();
+        $endDate = Carbon::today();
+
+        while ($currentDate->lte($endDate)) {
+            $date = $currentDate->toDateString();
+
+            $dailyIncome = intval($this->transactionRepository->getTotalAmountByTypeAndDateRange(
+                "income",
+                $date,
+                $date
+            ));
+            $dailyExpense = intval($this->transactionRepository->getTotalAmountByTypeAndDateRange(
+                "expense",
+                $date,
+                $date
+            ));
+            $dailyProfit = $dailyIncome - $dailyExpense;
+
+            $detailIncome[] = [
+                "date" => $date,
+                "amount" => $dailyIncome,
+            ];
+            $detailExpense[] = [
+                "date" => $date,
+                "amount" => $dailyExpense,
+            ];
+            $detailProfit[] = [
+                "date" => $date,
+                "amount" => $dailyProfit,
+            ];
+
+            $currentDate->addDay();
+        }
+
         $data = [
             "profit" => [
                 "amount" => $profit,
                 "from_date" => $fromDate,
                 "to_date" => $toDate,
+                "detail" => $detailProfit,
             ],
             "income" => [
                 "amount" => $income,
                 "from_date" => $fromDate,
                 "to_date" => $toDate,
+                "detail" => $detailIncome,
             ],
             "expense" => [
                 "amount" => $expense,
                 "from_date" => $fromDate,
                 "to_date" => $toDate,
+                "detail" => $detailExpense,
             ],
         ];
 
